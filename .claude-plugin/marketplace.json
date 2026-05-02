@@ -1,0 +1,20 @@
+{
+  "name": "yoda-skills",
+  "owner": {
+    "name": "Yoda",
+    "email": "yehuda.ab@gmail.com"
+  },
+  "metadata": {
+    "description": "Skill-building utilities by Yoda — meta-skills, decomposition tools, and critical-thinking helpers.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "skill-architect",
+      "source": "./plugins/skill-architect",
+      "description": "Critical-thinking decomposition skill that runs before any new skill is authored. Detects task-vs-skill-vs-agent shape, surfaces every assumption, and decomposes into a layered set of 5–10+ skills before delegating to skill-creator.",
+      "version": "0.1.0",
+      "tags": ["meta", "skill-creation", "critical-thinking", "decomposition", "verification"]
+    }
+  ]
+}

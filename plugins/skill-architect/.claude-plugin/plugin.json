@@ -1,0 +1,11 @@
+{
+  "name": "skill-architect",
+  "version": "0.1.0",
+  "description": "Critical-thinking decomposition skill that runs before any new skill is authored. Detects task-vs-skill-vs-agent shape, surfaces every assumption, and decomposes into a layered set of 5–10+ skills before delegating to skill-creator.",
+  "author": {
+    "name": "Yoda",
+    "email": "yehuda.ab@gmail.com"
+  },
+  "homepage": "https://github.com/yodausername/yoda-skills",
+  "license": "MIT"
+}
