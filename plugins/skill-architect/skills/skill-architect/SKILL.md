@@ -17,6 +17,60 @@ Naive skill creation produces three failure modes:
 
 Skill Architect catches all three before they happen.
 
+## Abstract catalog and inheritance
+
+Skill-architect maintains an abstract catalog under `abstracts/`. Every produced decomposition checks the catalog and declares inheritance both at design time (in the brief) and at runtime (in the authored SKILL.md).
+
+**Two tiers, with optional nesting under domain:**
+
+- **Foundation abstracts** (`abstracts/foundation/`) — reusable everywhere: `orchestrator`, `input-scrutiny`, `artifact-scrutiny`, `risk-register-manager`. Every skill set uses all four (one of each, sometimes shared with other sets). Foundation tier stays flat — these don't have sub-types.
+- **Domain abstracts** (`abstracts/domain/`) — recognizable conceptual patterns. The folder follows the **folder-and-file nesting pattern** (Olympus convention): `<name>.md` is the abstract, `<name>/` is the container for sub-domain abstracts when 2+ concretes earn one. Currently: `due-diligence.md`. Future sub-domains live inside `due-diligence/`, etc.
+
+**Levels (controlled vocabulary):**
+`FOUNDATION` → `DOMAIN` → `SUB-DOMAIN` → `CONCRETE`. A concrete may inherit from any tier above; sub-domains inherit from domain; domains inherit from one or more foundation abstracts.
+
+**Header schema** (every abstract file's preamble, immediately after the title):
+
+```
+**Domain:** <full-path-from-its-tier-root>
+**Level:** FOUNDATION | DOMAIN | SUB-DOMAIN | CONCRETE
+**Inherits From:** <abstract>, <abstract>, ...   (or: none for foundation roots)
+```
+
+**Inheritance chain (typical):**
+`concrete skill set` → `(optional sub-domain)` → `domain abstract` → `foundation abstracts`.
+
+**Where the catalog plugs into the workflow:**
+
+- **Phase 0 — Triage** scans `abstracts/domain/` (recursively, including nested sub-domain folders) for a match. If yes, surfaces the inheritance up front.
+- **Phase 1a — Reframe** explicitly declares the inheritance chain in the Reframe Statement.
+- **Phase 4 — Refine briefs** tags each brief with `Conforms to: <leaf abstract>, <domain abstract>` and ensures the brief covers every required section from each abstract.
+- **Phase 6 — Delegate** hands skill-creator the brief plus the abstract contract files; skill-creator emits the **runtime preamble** (below) at the top of the authored SKILL.md and then writes the domain-specific delta.
+
+### Runtime preamble pattern (Olympus READ-FIRST convention)
+
+Every concrete SKILL.md authored by skill-creator emits an `## Inheritance` block right after its frontmatter, looking like:
+
+```
+## Inheritance
+**Domain:** il-buy-side-land-development-dd
+**Level:** CONCRETE
+**Inherits From:** orchestrator (foundation), risk-register-manager (foundation), due-diligence (domain)
+
+**READ FIRST (in order):**
+1. abstracts/foundation/orchestrator.md
+2. abstracts/foundation/risk-register-manager.md
+3. abstracts/domain/due-diligence.md
+
+**THEN APPLY THE DELTA BELOW.**
+```
+
+This makes inheritance **visible at runtime** (when Claude loads the skill) — not buried in design-time metadata. The body of the SKILL.md is the *delta* on top of the inherited contracts: only the domain-specific specialization (jurisdiction-specific mechanics, audience format, etc.) — overlap with the abstract is replaced by `(see <abstract>)`.
+
+When the request doesn't match any existing domain abstract, surface that explicitly: *"This is a new domain pattern. After the design pass, consider promoting the result to an abstract."* A pattern earns a domain abstract when at least **two** concrete skill sets would inherit from it.
+
+See `abstracts/README.md` for the catalog itself, contract template, and rules for adding new abstracts.
+
 ## What counts as a skill (and what doesn't)
 
 | Concept | Definition | Example |
@@ -67,9 +121,19 @@ Every invocation of skill-architect starts with **Phase 0 — Triage**. Phase 0 
 
 Do not skip phases inside whichever path you're on. Do not collapse Phase 5 (user approval) into Phase 6 (delegation).
 
-### Phase 0 — Triage (skip the gate when appropriate)
+### Phase 0 — Triage (skip the gate when appropriate; scan the abstract catalog)
 
 Not every "create a skill" request needs full decomposition. Sometimes a request really is one narrow skill. Phase 0 decides which path to run.
+
+**Before the fast/full decision, scan the abstract catalog (`abstracts/domain/`) for a match.** If the request matches an existing domain abstract (e.g., "create a DD skill" matches `due-diligence`), say so up front:
+
+> "This looks like a `due-diligence` instance — the design will inherit from that abstract plus the four foundation abstracts."
+
+If no domain match exists, note it explicitly:
+
+> "This is a new domain pattern; no existing abstract fits. After we design it, if a future skill set would also fit this shape, we should promote the result to an abstract."
+
+The catalog scan informs the fast/full decision but doesn't override it. A request that matches a domain abstract still goes fast-path if it's a single narrow leaf within that domain.
 
 **Run the fast path when ALL of these hold:**
 
@@ -106,9 +170,9 @@ Ask yourself:
 - If they said "skill", do they mean it in the technical sense, or are they using "skill" colloquially for "thing Claude can do"?
 - Is the request actually one skill, or a federation of several?
 
-Output a one-paragraph **Reframe Statement**, e.g.:
+Output a one-paragraph **Reframe Statement** that **declares the inheritance chain** when a domain abstract matches, e.g.:
 
-> You asked for a "due-diligence skill". Due diligence is a **task** — a workflow with a deliverable (a DD report). The skills it composes are: legal, corporate-records, real-estate-valuation, environmental-risk, financial-stress-testing, KYC/AML, plus an orchestrator. I propose we build the skill set, and either you run the task by invoking the orchestrator, or we wrap it in a scheduled task / agent later.
+> You asked for a "due-diligence skill". Due diligence is a **task** — a workflow with a deliverable (a DD report). This skill set is a concrete instance of `due-diligence` (domain) and uses `orchestrator`, `input-scrutiny`, `artifact-scrutiny`, `risk-register-manager` (foundation). The leaves it composes are: legal, corporate-records, real-estate-valuation, environmental-risk, financial-stress-testing, KYC/AML, plus an orchestrator. I propose we build the skill set, and either you run the task by invoking the orchestrator, or we wrap it in a scheduled task / agent later.
 
 If the request is genuinely a single narrow skill (e.g., "a skill for converting Bible references between Hebrew and Latin numbering"), say so — and **still** run input-scrutiny in Phase 2, since input scrutiny is non-negotiable.
 
@@ -231,16 +295,17 @@ These are non-negotiable. If you're tempted to skip one, write a one-line justif
 
 Be agile: if the request implies a scope not on this list (export controls, IP licensing, animal welfare, OT/SCADA security, defense compliance), invent the right cross-cutting skill. Don't force the request into the checklist.
 
-### Phase 4 — Refine each proposed skill
+### Phase 4 — Refine each proposed skill (with abstract conformance)
 
 For each skill in the decomposition, write a one-page brief that includes:
 
 - **Name** (kebab-case, narrow, jurisdiction- or platform-tagged where relevant)
+- **Conforms to:** explicit list of abstracts this skill conforms to (e.g., `orchestrator (foundation), due-diligence (domain)`). Pull required sections from each abstract; the brief inherits the contract by reference and only writes the domain-specific delta.
 - **One-line description** with strong trigger keywords (this is what makes it auto-fire later)
 - **Why this skill exists** (what it adds that no other skill in the set covers)
 - **Inputs it expects** (with verification tier per input)
-- **Skeptical checks** — at least three "what could be wrong about this input" questions the skill must always ask
-- **Outputs it produces** — including a mandatory **risk register** entry (see `templates/risk_register.md`)
+- **Skeptical checks** — at least three "what could be wrong about this input" questions the skill must always ask, **plus** the mandatory checks inherited from each abstract
+- **Outputs it produces** — including the standard outputs from each abstract plus a mandatory **risk register** (see `abstracts/foundation/risk-register-manager.md`)
 - **Dependencies** on other skills in the set (which it consults, which consult it)
 - **Out of scope** — what it explicitly does *not* cover (forces narrowness)
 
@@ -332,10 +397,13 @@ When delegating in Phase 6, use the `skill-creator` that's available on the curr
 
 ## Templates and references
 
+- `abstracts/README.md` — the abstract catalog (foundation + domain). Read this whenever Phase 0 / 1a / 4 runs.
+- `abstracts/foundation/*.md` — the four foundation abstracts (orchestrator, input-scrutiny, artifact-scrutiny, risk-register-manager).
+- `abstracts/domain/*.md` — domain abstracts (currently: due-diligence).
 - `templates/proposal.md` — the Phase 5 proposal you present to the user.
 - `templates/verification_plan.md` — the Phase 2 input verification plan.
-- `templates/risk_register.md` — the standard risk register schema every produced skill must emit.
-- `templates/skill_brief.md` — the per-skill brief from Phase 4.
+- `templates/risk_register.md` — the standard risk register schema (also documented in `abstracts/foundation/risk-register-manager.md`).
+- `templates/skill_brief.md` — the per-skill brief from Phase 4 (now includes the `Conforms to:` field).
 - `examples/due_diligence.md` — worked example: real-estate due diligence decomposed into 9 skills.
 - `examples/cloud_deploy.md` — worked example: "deploy to GCP" decomposed across legal, security, performance, devops, and an orchestrator.
 - `REFERENCE.md` — extended methodology, edge cases, and rationale. Read when a request doesn't fit cleanly into the six phases.

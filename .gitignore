@@ -5,3 +5,6 @@
 .vscode/
 __pycache__/
 *.pyc
+
+# skill-creator eval byproducts (per-skill workspace dirs)
+*-workspace/

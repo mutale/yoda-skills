@@ -1,0 +1,26 @@
+{
+  "skill_name": "il-land-registry-and-rmi",
+  "evals": [
+    {
+      "id": 0,
+      "name": "ramat-gan-development-site-tabu-and-seller-check",
+      "prompt": "I'm looking at a development site in Ramat Gan, גוש 6128 חלקה 49. The seller is a guy named David Levy, but he sent me a one-line email saying he's representing the family who 'have always owned it' and asks for a 5% deposit by Friday. Walk me through what the Tabu would actually show, what to confirm before sending any money, and whether there's any structural reason David Levy might not be the registered owner.",
+      "expected_output": "Walk through the gush/chelka system for that identifier, distinguish freehold vs. RMI חכירה (and note that central Ramat Gan is mixed), spell out what a nesach would list, flag the seller-of-record mismatch risk explicitly (corporate transfer not registered, estate, POA, undisclosed nominee), recommend pulling the nesach + RMI status check + execution-office search before any deposit, surface residuals (registry lag, RMI side letters, off-record municipal arrears), produce a risk register with R-LEGAL/R-IDENT/R-INFO entries, and refuse to opine on whether to proceed.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "kibbutz-rmi-leasehold-pre-purchase",
+      "prompt": "We're buying a 12-dunam plot from a kibbutz in the Galilee. The kibbutz says it's on 'standard RMI חכירה' and that the lease is 'מהוון so we don't have to worry about anything'. They want us to sign in 3 weeks. What do I need to ask about the lease before signing, and what specifically should I get from RMI vs. from the kibbutz?",
+      "expected_output": "Force the בעלות vs. חכירה distinction (this is חכירה — not ownership), demand the actual חוזה חכירה from RMI (not just kibbutz summary), enumerate the lease analysis fields (term remaining, היוון completeness, ייעוד / agricultural-only restriction, transfer rules, dmei haskama / dmei heter, pre-emption rights, exit terms), warn about agricultural-use restrictions and RMI consent timing, flag that 'מהוון' is often partial or applies to original term only, recommend independent attorney + RMI file pull, surface residuals, emit risk register.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "stale-2019-caveat-investigation",
+      "prompt": "I just pulled a nesach on an apartment in Tel Aviv (תת-חלקה 14 in גוש 6213 חלקה 88) and there's a הערת אזהרה from 2019 in favor of someone named Yael Cohen. The seller (his name's Avi Mizrahi) says it was 'just a family arrangement to protect his sister's housing rights' and that we can ignore it. He wants to close in 2 weeks. Is that reassuring? What would I actually need to do about that caveat before closing, and how would I confirm the seller's story?",
+      "expected_output": "Reject 'just ignore it' framing — every caveat has a date, beneficiary, and asserted basis, and all three need to be interrogated. Walk through how to read the caveat in the nesach, what kinds of basis are common (sale agreement, security interest, family arrangement, lis pendens), and what evidence the seller would need to produce to substantiate his version. Recommend cancellation procedure (need Yael Cohen's consent or a court order) before deposit. Flag that the seller has a structural incentive to minimize. Surface residuals (caveat may protect rights superior to the new buyer's), emit risk register, no go/no-go opinion.",
+      "files": []
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "skill-architect",
-  "version": "0.1.0",
-  "description": "Critical-thinking decomposition skill that runs before any new skill is authored. Detects task-vs-skill-vs-agent shape, surfaces every assumption, and decomposes into a layered set of 5–10+ skills before delegating to skill-creator.",
+  "version": "0.3.0",
+  "description": "Critical-thinking decomposition skill that runs before any new skill is authored. Detects task-vs-skill-vs-agent shape, surfaces every assumption, and decomposes into a layered set of 5–10+ skills before delegating to skill-creator. v0.3 adopts the Olympus SDLC inheritance pattern: Inherits-From headers on every abstract, folder-and-file nesting under domain, and READ-FIRST runtime preamble emitted into every authored SKILL.md.",
   "author": {
     "name": "Yoda",
     "email": "yehuda.ab@gmail.com"

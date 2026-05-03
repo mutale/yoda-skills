@@ -5,16 +5,35 @@
     "email": "yehuda.ab@gmail.com"
   },
   "metadata": {
-    "description": "Skill-building utilities by Yoda — meta-skills, decomposition tools, and critical-thinking helpers.",
+    "description": "Skill-building utilities by Yoda \u2014 meta-skills, decomposition tools, and critical-thinking helpers.",
     "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "skill-architect",
       "source": "./plugins/skill-architect",
-      "description": "Critical-thinking decomposition skill that runs before any new skill is authored. Detects task-vs-skill-vs-agent shape, surfaces every assumption, and decomposes into a layered set of 5–10+ skills before delegating to skill-creator.",
+      "description": "Critical-thinking decomposition skill that runs before any new skill is authored. v0.3 adopts the Olympus SDLC inheritance pattern: Inherits-From headers, folder-and-file nesting, READ-FIRST preamble in every authored SKILL.md.",
+      "version": "0.3.0",
+      "tags": [
+        "meta",
+        "skill-creation",
+        "critical-thinking",
+        "decomposition",
+        "verification"
+      ]
+    },
+    {
+      "name": "il-land-dd",
+      "source": "./plugins/il-land-dd",
+      "description": "Israeli buy-side land/development real-estate DD \u2014 12 layered skills (foundation + 6 domain experts + 4 cross-cutting + orchestrator). Inherits from skill-architect's abstract catalog. Audience: internal investment committee.",
       "version": "0.1.0",
-      "tags": ["meta", "skill-creation", "critical-thinking", "decomposition", "verification"]
+      "tags": [
+        "real-estate",
+        "due-diligence",
+        "israel",
+        "land-development",
+        "investment-committee"
+      ]
     }
   ]
 }

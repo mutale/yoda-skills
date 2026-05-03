@@ -6,6 +6,26 @@
 
 **Layer:** {{0 / 1 / 2 / 3}}
 
+**Conforms to:** {{e.g., `orchestrator (foundation), due-diligence (domain)` — list every abstract the skill inherits from. Pull required contract sections from each abstract; only write the domain-specific delta below. See `abstracts/README.md`.}}
+
+**Authored SKILL.md preamble (skill-creator must emit this at the top of the SKILL.md, after the YAML frontmatter):**
+
+```
+## Inheritance
+**Domain:** {{kebab-case-name}}
+**Level:** CONCRETE
+**Inherits From:** {{same as Conforms to above}}
+
+**READ FIRST (in order):**
+1. abstracts/foundation/{{abstract-1}}.md
+2. abstracts/foundation/{{abstract-2}}.md
+3. abstracts/domain/{{domain-abstract}}.md
+
+**THEN APPLY THE DELTA BELOW.**
+```
+
+Body of the SKILL.md should only document **domain-specific specialization** (the delta). Anything covered by an abstract is referred to by name (`(see orchestrator abstract)`) rather than re-stated.
+
 **One-line description (with strong trigger keywords):**
 {{Description that auto-fires on real-user phrasings. Be a little pushy per skill-creator's guidance — Claude tends to under-trigger skills.}}
 
