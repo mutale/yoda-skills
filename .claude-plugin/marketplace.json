@@ -21,19 +21,6 @@
         "decomposition",
         "verification"
       ]
-    },
-    {
-      "name": "il-land-dd",
-      "source": "./plugins/il-land-dd",
-      "description": "Israeli buy-side land/development real-estate DD \u2014 12 layered skills (foundation + 6 domain experts + 4 cross-cutting + orchestrator). Inherits from skill-architect's abstract catalog. Audience: internal investment committee.",
-      "version": "0.1.0",
-      "tags": [
-        "real-estate",
-        "due-diligence",
-        "israel",
-        "land-development",
-        "investment-committee"
-      ]
     }
   ]
 }

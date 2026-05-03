@@ -8,3 +8,6 @@ __pycache__/
 
 # skill-creator eval byproducts (per-skill workspace dirs)
 *-workspace/
+
+# il-land-dd is Yoda's personal output — installs locally, not via this marketplace
+plugins/il-land-dd/
