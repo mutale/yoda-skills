@@ -70,6 +70,23 @@ session_id: <claude-session-id>               # required, provenance
 | `log.md` | Operation log: `date \| op \| source \| pages_touched \| session_id`. | **Yes**. |
 | `questions.md` | Open-questions backlog. Each open question is one block. Resolved → promoted to a standalone page and removed here. | No. |
 | `decisions.md` | ADR-lite, one block per decision: date, decision, rationale, alternatives. | Append-only for the entries; pages can be added but never edited. |
+| MOC pages (`<topic>-moc.md`) | Map-of-content tables for whole categories — one table row per item with name + one-line description + status. Used INSTEAD of dedicated stub pages. | No (regenerated as items earn dedicated pages). |
+
+### Lean-wiki principles (mandatory)
+
+The wiki is meant to be small enough to scan, dense enough to be useful, and durable across sessions. To prevent bloat, every write (via `wiki-updater` or `wiki-curator`) and every audit (via `wiki-linter`) consults these principles:
+
+1. **Don't auto-ingest in bulk.** When a domain has many similar items (e.g., 26 connectors, 81 PDF rules, 11 DLLs), build an MOC table — one row per item — and only promote a row to its own dedicated page when that item is *cited* (referenced from an incident, a decision, or another page). Stubs without content are bloat.
+2. **Pages should be short.** Aim for under 150 lines per page. If a page goes longer, split into MOC + child pages OR move the long body into a `## Details (optional reading)` section.
+3. **MOC tables beat stub pages.** A row with name + one-line description + status is faster to read than a dedicated empty page. Only create a dedicated page when there's real content (verified evidence, code refs, decision rationale).
+4. **No defensive padding.** Drop "Wave 2 stub" placeholders, "TBD" tables, "to be ingested" notes. Empty future is expressed once in the MOC ("Not yet ingested"), not in stub pages.
+5. **Citations point at `raw/`** — don't paste source passages into the wiki unless you're annotating them. The page contains the *takeaway* and a footnote citation; the raw passage stays in `raw/`.
+6. **One page per CONCEPT, not per ARTIFACT.** N artifacts that share M scaffolding shapes give you M concept pages, not N stubs.
+7. **The MOC is the index.** If a topic can't be found via the MOC, add a row to the MOC — don't invent a new page.
+
+**Issue-resolution compaction:** During an active investigation, pages may legitimately grow with logs, traces, exploration notes, and intermediate hypotheses — that's part of solving the issue. **Once the issue is resolved and confirmed**, those pages get compacted by `wiki-pruner`: a short summary replaces the verbose body, the detailed content is archived to `output/<date>-resolved-<issue>/`, and the summary links to the archive. The wiki stays lean; the detail stays preserved.
+
+**When to prune:** any time the vault exceeds ~50 pages, on a user-issued `/prune` command, or when an issue is closed via `/resolve <issue>`. `wiki-linter` surfaces bloat candidates as part of its audit even when no prune is requested.
 
 ### Template page
 

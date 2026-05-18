@@ -31,21 +31,35 @@ Wikis decay without active maintenance — old pages contradict new sources, lin
 
 ### Audit checks
 
+**Conformance to schema:**
+
 1. **Frontmatter schema** — every page's YAML conforms to the shape skill's schema. Per-page pass/fail.
 2. **Wikilinks resolve** — every `[[wikilink]]` targets an existing page in the same vault, or a cross-vault link with a valid target.
 3. **Embeds resolve** — every `![[asset]]` references a real file in the vault.
 4. **Citations resolve** — every `[^src]` footnote references a real file under `raw/` (general) or a real source range at the recorded SHA (code).
-5. **Orphan pages** — pages with zero inbound `[[wikilinks]]` from anywhere in the vault. **Note:** orphan ≠ delete-candidate; some pages are intentional entry points (`index.md`, `questions.md`). Flag for review, not auto-remove.
-6. **Stale SHA (code wiki only)** — pages whose `source_sha` is older than current HEAD AND whose `source_files` have changed since.
-7. **Tag contradictions** — `status/stable` + `coverage/untested` (code wiki). `status/wip` + `status/stable` (any wiki — multiple status tags is a bug).
-8. **Internal contradictions** — heuristic: two pages tagged the same topic with conflicting key claims. Best-effort, may have false positives.
-9. **Missing concept pages** — a `[[wikilink]]` to `[[concept-x]]` where no `concept-x.md` exists; should be a stub at minimum.
+5. **Stale SHA (code wiki only)** — pages whose `source_sha` is older than current HEAD AND whose `source_files` have changed since.
+6. **Tag contradictions** — `status/stable` + `coverage/untested` (code wiki). `status/wip` + `status/stable` (any wiki — multiple status tags is a bug).
+
+**Conformance to lean-wiki principles (per `obsidian-wiki-shape`):**
+
+7. **Long pages** — pages over 150 lines. Candidate for split into MOC + children, or `## Details (optional reading)` collapse.
+8. **Stub pages** — pages with frontmatter + "Related pages" but body < 30 lines. Candidate for demote-to-MOC-row.
+9. **Defensive padding** — pages whose body matches `^(TBD|Wave \d+ stub|to be ingested|placeholder|coming soon)` patterns. Candidate for delete (MOC row only).
+10. **Near-duplicates** — pages with same primary topic tag and high content overlap (heuristic, ≥70%). Candidate for merge.
+11. **Long inline log/trace blocks** — code blocks > 50 lines inside otherwise-normal pages. Candidate for extract to `output/` + link.
+12. **Resolved-issue bloat** — pages tagged `issue/<name>` where the issue is marked resolved in `decisions.md` or in a closed PR, but the page still carries verbose logs. Candidate for `/resolve <issue>` (Mode A of `wiki-pruner`).
+
+**Graph health:**
+
+13. **Orphan pages** — zero inbound `[[wikilinks]]` from anywhere in the vault. Orphan ≠ delete-candidate; some pages are intentional entry points. Flag for review.
+14. **Missing concept pages** — a `[[wikilink]]` to `[[concept-x]]` where no `concept-x.md` exists; should be a stub at minimum (or the link rewritten).
+15. **Internal contradictions** — heuristic: two pages tagged same topic with conflicting key claims.
 
 ### Severity grading (specialization of artifact-scrutiny)
 
 - `block` — Frontmatter doesn't parse; required fields missing.
-- `warn` — Broken wikilinks; stale code-wiki SHA; tag contradictions; broken citations.
-- `inform` — Orphan pages; missing concept stubs; potential contradictions.
+- `warn` — Broken wikilinks; stale code-wiki SHA; tag contradictions; broken citations; resolved-issue bloat; defensive padding.
+- `inform` — Orphan pages; missing concept stubs; potential contradictions; long pages; stub pages; near-duplicates; long inline log blocks.
 
 ### Domain-specific skeptical checks
 

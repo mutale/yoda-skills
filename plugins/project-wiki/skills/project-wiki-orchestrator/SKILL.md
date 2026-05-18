@@ -1,6 +1,6 @@
 ---
 name: project-wiki-orchestrator
-description: User-facing command surface for the project-wiki plugin. Sequences worker skills and merges outputs for slash commands /init, /sync, /go-to-code, /status, /lint, /promote. Enforces root uniformity (only raw/, output/, wiki/, code/, plus canonical files at project root). On /init, runs project-convention-migrator BEFORE project-artifact-classifier so declared semantics inform bucketing. Triggers on the slash commands; on phrases like "initialize this project for wiki", "set up project-wiki here", "add this project to my second-brain", "organize this folder for wiki", "reorganize this", "let's apply project-wiki", "go to code", "start coding", "snapshot for code", "audit the wiki", "promote this to wiki", "what's the wiki status".
+description: User-facing command surface for the project-wiki plugin. Sequences worker skills and merges outputs for slash commands /init, /sync, /go-to-code, /status, /lint, /promote, /prune, /resolve. Enforces root uniformity (only raw/, output/, wiki/, code/, plus canonical files at project root). On /init, runs project-convention-migrator BEFORE project-artifact-classifier so declared semantics inform bucketing AND writes a CLAUDE.md that bakes in the lean-wiki doctrine at the plugin level (not per-project). Triggers on the slash commands; on phrases like "initialize this project for wiki", "set up project-wiki here", "add this project to my second-brain", "organize this folder for wiki", "go to code", "start coding", "snapshot for code", "audit the wiki", "promote this to wiki", "the issue is resolved clean up the wiki", "prune the wiki", "compact the wiki", "what's the wiki status".
 ---
 
 ## Inheritance
@@ -46,6 +46,9 @@ The user, who is developing the project. Outputs are pragmatic — diffs, report
 6. [USER REVIEW + APPROVAL]         takeover report + classification + wiki migration plan
 7. file-move-safety                 apply approved moves + folder renames + content migration
 8. obsidian-wiki-shape              install schemas/templates + write project-specific CLAUDE.md
+                                    (CLAUDE.md template includes the lean-wiki doctrine,
+                                    citation rules, lint + prune commands — at the plugin
+                                    level, not invented per-project)
 9. (if code/ present)               code-wiki-shape stub for code/wiki/
 10. [final status report]
 ```
@@ -96,6 +99,40 @@ The user can `--dry-run` (default) to stop at step 6, or `--apply` to proceed.
 ```
 
 **Curation is mandatory.** No path commits content to `wiki/` without going through `wiki-curator` first. The orchestrator refuses to call `wiki-updater` for a `wiki/` write unless a corresponding `.project-wiki/candidates/<name>.md` exists and has been user-approved. The one exception is `/init`'s migration phase, where existing wiki content imported via `wiki-migrator` is by assumption already wiki-shaped (and gets tagged `status/needs-review`).
+
+#### `/prune` (periodic bloat sweep — Mode B of wiki-pruner)
+
+```
+1. wiki-linter (lean-wiki checks only)        identify bloat candidates per the audit list
+2. wiki-pruner                                 propose transformations per finding:
+                                               - long pages → split or collapse
+                                               - stubs → demote to MOC row
+                                               - defensive padding → delete
+                                               - near-duplicates → merge
+                                               - long log blocks → extract to output/
+3. [USER REVIEW + APPROVAL]                    per-finding yes/no; bulk yes if user trusts
+4. file-move-safety                            apply the approved transformations
+5. wiki-updater                                rewrite affected pages, update MOCs, append log.md
+6. [bloat report]                              before/after page count, lines saved, items archived
+```
+
+#### `/resolve <issue>` (post-resolution compaction — Mode A of wiki-pruner)
+
+```
+1. wiki-pruner                                 verify issue is actually resolved (decisions.md
+                                               entry, closed PR, user-declared resolved)
+2. wiki-pruner                                 identify pages tied to the issue (tag issue/<name>,
+                                               inbound wikilinks from the issue's decision, or
+                                               user-supplied page list)
+3. wiki-pruner                                 per page, categorize content KEEP vs ARCHIVE
+                                               draft compacted summary + archive plan
+4. [USER REVIEW + APPROVAL]                    review the compacted summary; user may edit
+5. file-move-safety                            apply: write summary to wiki/, move detail to
+                                               output/<date>-resolved-<issue>/
+6. wiki-updater                                update wikilinks across the vault (point at the
+                                               new summary, not the archived detail)
+7. [compaction report]                         summary written, detail archived, links rewritten
+```
 
 #### `/status`
 
@@ -174,7 +211,7 @@ The orchestrator aggregates and may add `R-ORCH-*` for cross-skill issues (e.g.,
 
 ### Consults
 
-Every Layer-1 skill: `project-convention-migrator`, `project-artifact-classifier`, `session-history-reader`, `wiki-migrator`, `wiki-curator`, `wiki-updater`, `wiki-linter`, `code-wiki-snapshotter`, `obsidian-wiki-shape`, `code-wiki-shape`. Plus Layer-2 cross-cutters: `dual-platform-adapter`, `file-move-safety`, `obsidian-compat-validator`.
+Every Layer-1 skill: `project-convention-migrator`, `project-artifact-classifier`, `session-history-reader`, `wiki-migrator`, `wiki-curator`, `wiki-updater`, `wiki-linter`, `wiki-pruner`, `code-wiki-snapshotter`, `obsidian-wiki-shape`, `code-wiki-shape`. Plus Layer-2 cross-cutters: `dual-platform-adapter`, `file-move-safety`, `obsidian-compat-validator`.
 
 ### Consulted by
 

@@ -77,6 +77,9 @@ Before emitting a candidate:
 3. **Don't auto-rename without thought.** The page name is a contract — once it's in the graph, every wikilink depends on it. Get it right the first time.
 4. **First-draft cruft varies by source.** A draft summary of an ingested PDF has different cruft than a brainstorm doc; calibrate the strip to the artifact type.
 5. **Curation is judgment, not mechanism.** If the artifact isn't ready for promotion (still half-formed, still arguing with itself, still missing key sources), surface that to the user — don't try to polish what shouldn't be promoted yet.
+6. **Apply the lean-wiki principles** from `obsidian-wiki-shape`. Specifically: is this draft really worth a dedicated page, or is it an MOC row? If the candidate is short on real content (verified evidence, code refs, decision rationale), propose adding a row to the relevant MOC page instead of creating a new file. Same gate for "Wave 2 stub" / "TBD" candidates — those don't get promoted; they get a row noting "Not yet ingested."
+7. **Long pages get split at write time, not just at lint time.** If the candidate is > 150 lines, propose either splitting (MOC + children) or collapsing the long tail under `## Details (optional reading)` before the user reviews. Don't ship a > 150-line candidate to `wiki/`.
+8. **Log/trace dumps don't belong in `wiki/`.** If the artifact in `output/` is mostly a log dump or stack trace from a debugging session, propose: keep it in `output/`, write a short summary in `wiki/` that links to the dump. The summary is what gets curated, not the dump itself. Once the underlying issue is resolved, `wiki-pruner` may compact even the summary.
 
 ### Outputs (delta)
 

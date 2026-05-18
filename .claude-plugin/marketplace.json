@@ -25,7 +25,7 @@
     {
       "name": "project-wiki",
       "source": "./plugins/project-wiki",
-      "description": "Karpathy-style LLM Wiki applied across every Claude Code and Cowork project. Canonical layout (raw/ + output/ + wiki/ + code/wiki/), Obsidian-compatible vault, clean takeover of existing project conventions, snapshot of outer wiki into code/wiki on /go-to-code. Default policy is curate-to-wiki: Claude writes to output/ freely, but wiki/ entries go through a mandatory wiki-curator gate. Fourteen layered skills inheriting from skill-architect's foundation abstracts.",
+      "description": "Karpathy-style LLM Wiki applied across every Claude Code and Cowork project. Canonical layout (raw/ + output/ + wiki/ + code/wiki/), Obsidian-compatible vault, clean takeover of existing project conventions, snapshot of outer wiki into code/wiki on /go-to-code. Three policies baked in: default-to-output, curate-to-wiki (mandatory wiki-curator gate), and keep-it-lean (wiki-pruner compacts verbose investigation pages once issues resolve; archived detail goes to output/). Fifteen layered skills inheriting from skill-architect's foundation abstracts.",
       "version": "0.1.0",
       "tags": [
         "wiki",
