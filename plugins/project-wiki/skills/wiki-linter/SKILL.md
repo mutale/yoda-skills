@@ -1,6 +1,6 @@
 ---
 name: wiki-linter
-description: Audits a wiki vault — contradictions between pages, orphan pages (no inbound [[wikilinks]]), broken wikilinks (target missing), citations pointing to nonexistent raw/ files, stale git-SHA pages in code wiki, frontmatter schema violations, contradictory tag combinations like status/stable + coverage/untested. Triggers on /lint, when the user asks "audit the wiki", "check for broken links", "wiki health check", "find outdated pages", "wiki review", "lint the docs". Report-only — never auto-fixes; emits a numbered finding list for the orchestrator or user to act on.
+description: Audits a wiki vault for conformance to the project-wiki rules — frontmatter schema (via obsidian-wiki-shape or code-wiki-shape), contradictions between pages, orphan pages (no inbound [[wikilinks]]), broken wikilinks (target missing), citations pointing to nonexistent raw/ files, stale git-SHA pages in code wiki, contradictory tag combinations like status/stable + coverage/untested. Conformance is the point — every check verifies that the vault still follows what the shape skills declare it should be. Triggers on /lint, when the user asks "audit the wiki", "check the wiki conforms", "are we following the rules", "check for broken links", "wiki health check", "find outdated pages", "wiki review". Report-only — never auto-fixes; emits a numbered finding list for the orchestrator or user to act on.
 ---
 
 ## Inheritance

@@ -23,6 +23,14 @@ description: Translates conversation deltas, ingested sources, and code changes 
 
 Ingest is the daily operation of the plugin. Centralizing every write through one skill means every page goes through the same provenance, citation, and validation pipeline. If updater branches per page-type or per vault, the conventions drift.
 
+### Default target policy (mandatory)
+
+- **`output/` is the default write target** for any artifact Claude generates. Drafts, analyses, brainstorms, code snippets, exported tables, anything ad-hoc — all go to `output/<date>-<session>/`. The updater can write here freely.
+- **`wiki/` writes are NEVER direct.** A page enters `wiki/` only via the orchestrator's `/promote` flow, which runs `wiki-curator` first to produce a candidate, then waits for explicit user approval, and only then calls back into `wiki-updater` to commit the approved candidate.
+- **Migration is the one exception** — content imported from an existing wiki via `wiki-migrator` is by assumption already wiki-shaped and gets tagged `status/needs-review` for follow-up curation.
+
+This policy is what curation buys: every `wiki/` page has been deliberately picked, named, tagged, sourced, and approved. The wiki is curated knowledge, not a chat-log dump.
+
 ### Inputs
 
 | Input | Tier | Source |

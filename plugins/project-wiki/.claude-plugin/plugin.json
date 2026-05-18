@@ -1,7 +1,7 @@
 {
   "name": "project-wiki",
   "version": "0.1.0",
-  "description": "Karpathy-style LLM Wiki applied across all Claude Code and Cowork projects. Imposes a canonical project layout (raw/ + output/ + wiki/ + code/wiki/), maintains an Obsidian-compatible knowledge base, takes over existing project conventions cleanly, and snapshots the wiki into code/wiki/ on /go-to-code. Thirteen layered skills inheriting from skill-architect's foundation abstracts.",
+  "description": "Karpathy-style LLM Wiki applied across all Claude Code and Cowork projects. Imposes a canonical project layout (raw/ + output/ + wiki/ + code/wiki/), maintains an Obsidian-compatible knowledge base, takes over existing project conventions cleanly, and snapshots the wiki into code/wiki/ on /go-to-code. Default policy is curate-to-wiki: Claude writes to output/ freely, but wiki/ entries go through a mandatory wiki-curator gate. Fourteen layered skills inheriting from skill-architect's foundation abstracts.",
   "author": {
     "name": "Yoda",
     "email": "yehuda.ab@gmail.com"

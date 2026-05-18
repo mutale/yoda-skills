@@ -84,11 +84,18 @@ The user can `--dry-run` (default) to stop at step 6, or `--apply` to proceed.
 
 ```
 1. project-artifact-classifier      verify <path> is in output/
-2. [USER CONFIRMATION]              "promote <path> to wiki/?"
-3. wiki-updater                     write a new wiki page from the artifact
-4. file-move-safety                 leave original in output/ (promotion is copy + curate, not move)
-5. [report]
+2. wiki-curator                     refine draft into a candidate wiki page
+                                    (strip cruft, resolve citations, add wikilinks,
+                                    pick name + tags, write summary)
+                                    emit to .project-wiki/candidates/<name>.md
+3. [USER REVIEW + APPROVAL]         user reads candidate, may edit, then approves;
+                                    may also escalate unresolved sources or rename
+4. wiki-updater                     commit the approved candidate to wiki/
+5. file-move-safety                 leave original in output/ (promotion is copy + curate, not move)
+6. [report]
 ```
+
+**Curation is mandatory.** No path commits content to `wiki/` without going through `wiki-curator` first. The orchestrator refuses to call `wiki-updater` for a `wiki/` write unless a corresponding `.project-wiki/candidates/<name>.md` exists and has been user-approved. The one exception is `/init`'s migration phase, where existing wiki content imported via `wiki-migrator` is by assumption already wiki-shaped (and gets tagged `status/needs-review`).
 
 #### `/status`
 
@@ -167,7 +174,7 @@ The orchestrator aggregates and may add `R-ORCH-*` for cross-skill issues (e.g.,
 
 ### Consults
 
-Every Layer-1 skill: `project-convention-migrator`, `project-artifact-classifier`, `session-history-reader`, `wiki-migrator`, `wiki-updater`, `wiki-linter`, `code-wiki-snapshotter`, `obsidian-wiki-shape`, `code-wiki-shape`. Plus Layer-2 cross-cutters: `dual-platform-adapter`, `file-move-safety`, `obsidian-compat-validator`.
+Every Layer-1 skill: `project-convention-migrator`, `project-artifact-classifier`, `session-history-reader`, `wiki-migrator`, `wiki-curator`, `wiki-updater`, `wiki-linter`, `code-wiki-snapshotter`, `obsidian-wiki-shape`, `code-wiki-shape`. Plus Layer-2 cross-cutters: `dual-platform-adapter`, `file-move-safety`, `obsidian-compat-validator`.
 
 ### Consulted by
 

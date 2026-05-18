@@ -43,7 +43,7 @@ Borrowed and extended from Andrej Karpathy's LLM Wiki pattern:
 - **`output/` separates production from curation** — Claude generates into `output/`; the user blesses what gets promoted to `wiki/`.
 - **`code/wiki/` is a snapshot vault** — implementation-time baseline; outer `wiki/` keeps churning, code-side wiki is stable per snapshot.
 
-## Skills (13)
+## Skills (14)
 
 ```
 Layer 3 (orchestrator):
@@ -57,8 +57,10 @@ Layer 2 (cross-cutting):
 Layer 1 (domain experts):
     obsidian-wiki-shape                     general vault spec
     code-wiki-shape                         code vault spec
-    wiki-updater                            chat → vault
-    wiki-linter                             health audit
+    wiki-updater                            chat → vault (default target: output/; wiki/ only via curator)
+    wiki-curator                            refines a draft into a wiki-ready candidate — the mandatory
+                                            gate between output/ and wiki/; no writes to wiki/ bypass this
+    wiki-linter                             conformance audit
     wiki-migrator                           existing wiki content → this structure
     project-convention-migrator             existing governance → this structure
     code-wiki-snapshotter                   outer wiki → code/wiki on /go-to-code
@@ -67,6 +69,15 @@ Layer 1 (domain experts):
 Layer 0 (foundation):
     project-artifact-classifier             input / output / wiki / code (with evidence + confidence)
 ```
+
+### Default-to-output, curate-to-wiki
+
+Two operating policies make `wiki/` worth opening in Obsidian:
+
+1. **Everything Claude generates defaults to `output/`** — drafts, analyses, ad-hoc artifacts. No promiscuous writes to `wiki/`.
+2. **`wiki/` entries go through `wiki-curator` first** — strip cruft, resolve citations, add `[[wikilinks]]`, pick a name and tags, write a real summary. User reviews the candidate before it commits. The curator is the gate; no path around it.
+
+`wiki-linter` is the conformance check that runs against the vault on demand or as part of `/sync` — it verifies the vault still follows the rules the shape skills declare.
 
 All inherit from `skill-architect`'s foundation abstracts (`input-scrutiny`, `artifact-scrutiny`, `orchestrator`, `risk-register-manager`). This is a **new domain pattern** (project-knowledge-management) — once a second concrete instance exists, the pattern should be promoted to a domain abstract in skill-architect.
 
