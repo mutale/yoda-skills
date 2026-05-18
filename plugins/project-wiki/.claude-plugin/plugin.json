@@ -7,8 +7,5 @@
     "email": "yehuda.ab@gmail.com"
   },
   "homepage": "https://github.com/mutale/yoda-skills",
-  "license": "MIT",
-  "dependencies": {
-    "skill-architect": ">=0.3.0"
-  }
+  "license": "MIT"
 }
