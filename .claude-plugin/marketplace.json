@@ -35,6 +35,20 @@
         "project-organization",
         "second-brain"
       ]
+    },
+    {
+      "name": "session-bridge",
+      "source": "./plugins/session-bridge",
+      "description": "Query other Claude Code sessions on this machine as if they were tools (RAG-like read sources). Ships a custom subagent type (`session-bridge:session-querier`), two slash commands (`/sb-list`, `/sb-poll`), and a using-session-bridge skill that enforces a strict privacy contract: target sessions are read sources, only the querier touches them, the umbrella session never absorbs transcripts. Default mode is branch-and-query (the target's JSONL is copied, queried via headless `claude --resume`, then the copy is deleted). Append mode is opt-in and refuses to write to sessions with in-flight work. No MCP server; auto-discovers sessions in ~/.claude/projects/ with a 7-day recency filter, .trash/ excluded.",
+      "version": "0.1.0",
+      "tags": [
+        "sessions",
+        "multi-session",
+        "agents",
+        "rag",
+        "privacy",
+        "fanout"
+      ]
     }
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "name": "session-bridge",
+  "version": "0.1.0",
+  "description": "Query other running Claude Code sessions on this machine as if they were subagents. Ships a custom subagent type (`session-bridge:session-querier`), two slash commands (`/sb-list`, `/sb-poll`), and a using-session-bridge skill that teaches Claude when to read-only vs branch-and-query vs append. Default is branch-and-query: the target session's JSONL is copied to a scratch sid, queried via headless `claude --resume`, and the copy deleted. Original sessions are never mutated unless the caller explicitly opts in with mode=append. No MCP server. Auto-discovers sessions in ~/.claude/projects/ with a 7-day recency filter, .trash/ excluded.",
+  "author": {
+    "name": "Yoda",
+    "email": "yehuda.ab@gmail.com"
+  },
+  "homepage": "https://github.com/mutale/yoda-skills",
+  "license": "MIT"
+}
